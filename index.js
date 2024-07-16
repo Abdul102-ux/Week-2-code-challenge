@@ -13,37 +13,73 @@ function renderItems() {
     
     listContainer.innerHTML = '';
 
-
-    shoppingItems.forEach(item => {
+    
+    shoppingItems.forEach((item, index) => {
+        
         const li = document.createElement('li');
         li.textContent = item.name;
+
+        
         if (item.isPurchased) {
             li.classList.add('marked');
         }
+
+        
+        const purchaseButton = document.createElement('button');
+        purchaseButton.textContent = 'Mark Purchased';
+        purchaseButton.addEventListener('click', () => {
+            markItemAsPurchased(index);
+        });
+        li.appendChild(purchaseButton);
+
+        
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'Remove';
+        removeButton.addEventListener('click', () => {
+            removeItem(index);
+        });
+        li.appendChild(removeButton);
+
+        
         listContainer.appendChild(li);
     });
 }
 
-addItemButton.addEventListener('click', function() {
+
+function markItemAsPurchased(index) {
+    shoppingItems[index].isPurchased = true;
+    renderItems();
+}
+
+
+function removeItem(index) {
+    shoppingItems.splice(index, 1);
+    renderItems();
+}
+
+
+addItemButton.addEventListener('click', () => {
     const itemName = itemInput.value.trim();
     if (itemName !== '') {
         shoppingItems.push({ name: itemName, isPurchased: false });
-        itemInput.value = ''; 
-        renderItems(); 
+        itemInput.value = '';
+        renderItems();
     }
 });
 
-markPurchasedButton.addEventListener('click', function() {
-    shoppingItems.forEach(item => {
-        item.isPurchased = true;
-    });
-    renderItems();
+markPurchasedButton.addEventListener('click', () => {
+    shoppingItems.forEach((item, index) => {
+        if (!item.isPurchased) {
+            markItemAsPurchased(index);
+        }
+    })
 });
 
 
-clearListButton.addEventListener('click', function() {
-    shoppingItems = []; 
-    renderItems(); 
+
+clearListButton.addEventListener('click', () => {
+    shoppingItems = [];
+    renderItems();
 });
 
 
